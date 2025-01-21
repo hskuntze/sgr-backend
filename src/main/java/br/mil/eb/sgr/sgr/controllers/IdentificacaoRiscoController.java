@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.mil.eb.sgr.sgr.dto.IdentificacaoRiscoDTO;
+import br.mil.eb.sgr.sgr.dto.report.ConjuntoSeveridadeReportDTO;
+import br.mil.eb.sgr.sgr.dto.report.RiscoSeveridadeReportDTO;
 import br.mil.eb.sgr.sgr.services.IdentificacaoRiscoService;
 
 @RestController
@@ -37,6 +39,16 @@ public class IdentificacaoRiscoController {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<IdentificacaoRiscoDTO> getById(@PathVariable String id) {
 		return ResponseEntity.ok().body(identificacaoRiscoService.getById(id));
+	}
+	
+	@GetMapping(value = "/reports/conjuntoSeveridade")
+	public ResponseEntity<List<ConjuntoSeveridadeReportDTO>> getConjuntoSeveridadeReport() {
+		return ResponseEntity.ok().body(identificacaoRiscoService.conjuntoSeveridadeReport());
+	}
+	
+	@GetMapping(value = "/reports/riscoSeveridade")
+	public ResponseEntity<List<RiscoSeveridadeReportDTO>> getRiscoSeveridadeReport() {
+		return ResponseEntity.ok().body(identificacaoRiscoService.riscoSeveridadeReport());
 	}
 	
 	/**
