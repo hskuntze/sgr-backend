@@ -7,9 +7,6 @@ import java.util.Set;
 import br.mil.eb.sgr.sgr.entities.Usuario;
 
 public class UsuarioDTO implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1646080403048849453L;
 
 	private Long id;

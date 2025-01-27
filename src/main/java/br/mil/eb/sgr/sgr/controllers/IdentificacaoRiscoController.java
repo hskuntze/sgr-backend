@@ -37,7 +37,7 @@ public class IdentificacaoRiscoController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<IdentificacaoRiscoDTO> getById(@PathVariable String id) {
+	public ResponseEntity<IdentificacaoRiscoDTO> getById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(identificacaoRiscoService.getById(id));
 	}
 	
@@ -68,7 +68,7 @@ public class IdentificacaoRiscoController {
 	 */
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<IdentificacaoRiscoDTO> update(@PathVariable String id, @RequestBody IdentificacaoRiscoDTO dto) {
+	public ResponseEntity<IdentificacaoRiscoDTO> update(@PathVariable Long id, @RequestBody IdentificacaoRiscoDTO dto) {
 		IdentificacaoRiscoDTO updatedDto = identificacaoRiscoService.update(id, dto);
 		
 		return ResponseEntity.ok().body(updatedDto);
@@ -79,7 +79,7 @@ public class IdentificacaoRiscoController {
 	 */
 	
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		identificacaoRiscoService.delete(id);
 		
 		return ResponseEntity.noContent().build();

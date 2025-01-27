@@ -16,7 +16,7 @@ import org.springframework.core.io.ClassPathResource;
 public class ExcelToMySQLImporter {
 	private static final String JDBC_URL = "jdbc:mysql://localhost:3306/sgr";
 	private static final String JDBC_USER = "root";
-	private static final String JDBC_PASSWORD = "diamante21";
+	private static final String JDBC_PASSWORD = "diamante21";	
 
 	public static void main(String[] args) {
 		try (InputStream is = new ClassPathResource("identificacao_risco_simplificado.xlsx").getInputStream();
@@ -27,7 +27,9 @@ public class ExcelToMySQLImporter {
 			if (sheet == null)
 				throw new RuntimeException("Planilha não encontrada!");
 
-			String sql = "INSERT INTO tb_identificacao_risco (id, projeto, contrato, tipo_risco, risco, conjunto, evento, descricao_risco, causa, data_risco, ano, data_limite, categoria, probabilidade, impacto, criticidade, severidade, consequencia, tratamento, impacto_financeiro, plano_contingencia, responsavel_risco, responsavel_conjunto, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO tb_identificacao_risco (identificado_por, projeto, contrato, tipo_risco, risco, id_conjunto, evento, descricao_risco, causa, data_risco, ano, data_limite, categoria, probabilidade, impacto, criticidade, severidade, consequencia, tratamento, impacto_financeiro, plano_contingencia, responsavel_risco, status) " +
+		             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 			PreparedStatement statement = connection.prepareStatement(sql);
 
 			for (int rowIndex = 0; rowIndex < 83; rowIndex++) {
@@ -37,7 +39,7 @@ public class ExcelToMySQLImporter {
 				}
 
 				// Preenche os parâmetros do PreparedStatement
-				for (int colIndex = 0; colIndex < 24; colIndex++) {
+				for (int colIndex = 0; colIndex < 23; colIndex++) {
 					Cell cell = row.getCell(colIndex);
 					
 					if (cell != null) {
