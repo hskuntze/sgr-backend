@@ -1,16 +1,19 @@
 package br.mil.eb.sgr.sgr.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import br.mil.eb.sgr.sgr.entities.IdentificacaoRisco;
 
-public class IdentificacaoRiscoDTO {
-	private String id;
+public class IdentificacaoRiscoDTO  implements Serializable {
+	private static final long serialVersionUID = -8036050502593337293L;
+	
+	private Long id;
+	private String identificadoPor;
 	private String projeto;
 	private String contrato;
 	private String tipoRisco;
 	private String risco;
-	private String conjunto;
 	private String evento;
 	private String descricaoRisco;
 	private String causa;
@@ -24,22 +27,23 @@ public class IdentificacaoRiscoDTO {
 	private String severidade;
 	private String impactoFinanceiro;
 	private String responsavelRisco;
-	private String responsavelConjunto;
 	private String status;
 	private Date dataLimite;
 	private Date dataRisco;
 	private Integer ano;
+	
+	private ConjuntoDTO conjunto;
 	
 	public IdentificacaoRiscoDTO() {
 	}
 	
 	public IdentificacaoRiscoDTO(IdentificacaoRisco e) {
 		this.id = e.getId();
+		this.identificadoPor = e.getIdentificadoPor();
 		this.projeto = e.getProjeto();
 		this.contrato = e.getContrato();
 		this.tipoRisco = e.getTipoRisco();
 		this.risco = e.getRisco();
-		this.conjunto = e.getConjunto();
 		this.evento = e.getEvento();
 		this.descricaoRisco = e.getDescricaoRisco();
 		this.causa = e.getCausa();
@@ -53,19 +57,28 @@ public class IdentificacaoRiscoDTO {
 		this.severidade = e.getSeveridade();
 		this.impactoFinanceiro = e.getImpactoFinanceiro();
 		this.responsavelRisco = e.getResponsavelRisco();
-		this.responsavelConjunto = e.getResponsavelConjunto();
 		this.status = e.getStatus();
 		this.dataLimite = e.getDataLimite();
 		this.dataRisco = e.getDataRisco();
 		this.ano = e.getAno();
+		
+		this.conjunto = new ConjuntoDTO(e.getConjunto());
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getIdentificadoPor() {
+		return identificadoPor;
+	}
+
+	public void setIdentificadoPor(String identificadoPor) {
+		this.identificadoPor = identificadoPor;
 	}
 
 	public String getProjeto() {
@@ -98,14 +111,6 @@ public class IdentificacaoRiscoDTO {
 
 	public void setRisco(String risco) {
 		this.risco = risco;
-	}
-
-	public String getConjunto() {
-		return conjunto;
-	}
-
-	public void setConjunto(String conjunto) {
-		this.conjunto = conjunto;
 	}
 
 	public String getEvento() {
@@ -212,14 +217,6 @@ public class IdentificacaoRiscoDTO {
 		this.responsavelRisco = responsavelRisco;
 	}
 
-	public String getResponsavelConjunto() {
-		return responsavelConjunto;
-	}
-
-	public void setResponsavelConjunto(String responsavelConjunto) {
-		this.responsavelConjunto = responsavelConjunto;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -252,15 +249,23 @@ public class IdentificacaoRiscoDTO {
 		this.ano = ano;
 	}
 
+	public ConjuntoDTO getConjunto() {
+		return conjunto;
+	}
+
+	public void setConjunto(ConjuntoDTO conjunto) {
+		this.conjunto = conjunto;
+	}
+
 	@Override
 	public String toString() {
-		return "IdentificacaoRiscoDTO [id=" + id + ", projeto=" + projeto + ", contrato=" + contrato + ", tipoRisco="
-				+ tipoRisco + ", risco=" + risco + ", conjunto=" + conjunto + ", evento=" + evento + ", descricaoRisco="
-				+ descricaoRisco + ", causa=" + causa + ", consequencia=" + consequencia + ", tratamento=" + tratamento
-				+ ", planoContingencia=" + planoContingencia + ", categoria=" + categoria + ", probabilidade="
-				+ probabilidade + ", impacto=" + impacto + ", criticidade=" + criticidade + ", severidade=" + severidade
-				+ ", impactoFinanceiro=" + impactoFinanceiro + ", responsavelRisco=" + responsavelRisco
-				+ ", responsavelConjunto=" + responsavelConjunto + ", status=" + status + ", dataLimite=" + dataLimite
-				+ ", dataRisco=" + dataRisco + ", ano=" + ano + "]";
+		return "IdentificacaoRiscoDTO [id=" + id + ", identificadoPor=" + identificadoPor + ", projeto=" + projeto
+				+ ", contrato=" + contrato + ", tipoRisco=" + tipoRisco + ", risco=" + risco + ", evento=" + evento
+				+ ", descricaoRisco=" + descricaoRisco + ", causa=" + causa + ", consequencia=" + consequencia
+				+ ", tratamento=" + tratamento + ", planoContingencia=" + planoContingencia + ", categoria=" + categoria
+				+ ", probabilidade=" + probabilidade + ", impacto=" + impacto + ", criticidade=" + criticidade
+				+ ", severidade=" + severidade + ", impactoFinanceiro=" + impactoFinanceiro + ", responsavelRisco="
+				+ responsavelRisco + ", status=" + status + ", dataLimite=" + dataLimite + ", dataRisco=" + dataRisco
+				+ ", ano=" + ano + ", conjunto=" + conjunto + "]";
 	}
 }

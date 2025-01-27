@@ -1,7 +1,6 @@
 package br.mil.eb.sgr.sgr.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,24 +9,26 @@ import org.springframework.stereotype.Service;
 import br.mil.eb.sgr.sgr.dto.IdentificacaoRiscoDTO;
 import br.mil.eb.sgr.sgr.dto.report.ConjuntoSeveridadeReportDTO;
 import br.mil.eb.sgr.sgr.dto.report.RiscoSeveridadeReportDTO;
+import br.mil.eb.sgr.sgr.entities.Conjunto;
 import br.mil.eb.sgr.sgr.entities.IdentificacaoRisco;
 import br.mil.eb.sgr.sgr.repositories.IdentificacaoRiscoRepository;
-import br.mil.eb.sgr.sgr.services.exceptions.RecursoExistenteException;
 import br.mil.eb.sgr.sgr.services.exceptions.RecursoNaoEncontradoException;
-import br.mil.eb.sgr.sgr.services.exceptions.RequisicaoNaoProcessavelException;
 
 @Service
 public class IdentificacaoRiscoService {
 
 	@Autowired
 	private IdentificacaoRiscoRepository identificacaoRiscoRepository;
+	
+	@Autowired
+	private ConjuntoService conjuntoService;
 
 	public List<IdentificacaoRiscoDTO> getAll() {
 		return identificacaoRiscoRepository.findAll().stream().map(ir -> new IdentificacaoRiscoDTO(ir))
 				.collect(Collectors.toList());
 	}
 
-	public IdentificacaoRiscoDTO getById(String id) {
+	public IdentificacaoRiscoDTO getById(Long id) {
 		IdentificacaoRisco ir = identificacaoRiscoRepository.findById(id)
 				.orElseThrow(() -> new RecursoNaoEncontradoException(
 						"Não foi possível encontrar uma IDENTIFICAÇÃO DE RISCO com ID " + id));
@@ -35,38 +36,32 @@ public class IdentificacaoRiscoService {
 	}
 
 	public IdentificacaoRiscoDTO register(IdentificacaoRiscoDTO dto) {
-		String id = dto.getId();
+		IdentificacaoRisco ir = new IdentificacaoRisco();
+		
+		Conjunto cj = conjuntoService.getEntity(dto.getConjunto().getId());
+		ir.setConjunto(cj);
 
-		if (id == null) {
-			throw new RequisicaoNaoProcessavelException("ID nulo. Requisição improcessável.");
-		}
-
-		Optional<IdentificacaoRisco> opt = identificacaoRiscoRepository.findById(id);
-
-		if (opt.isEmpty()) {
-			IdentificacaoRisco ir = new IdentificacaoRisco();
-			ir.setId(dto.getId());
-
-			dtoToEntity(ir, dto);
-			ir = identificacaoRiscoRepository.save(ir);
-
-			return new IdentificacaoRiscoDTO(ir);
-		} else {
-			throw new RecursoExistenteException("Um elemento com este ID já existe.");
-		}
-	}
-
-	public IdentificacaoRiscoDTO update(String id, IdentificacaoRiscoDTO dto) {
-		IdentificacaoRisco ir = identificacaoRiscoRepository.findById(id)
-				.orElseThrow(() -> new RecursoNaoEncontradoException(
-						"Não foi possível encontrar uma IDENTIFICAÇÃO DE RISCO com ID " + id));
 		dtoToEntity(ir, dto);
 		ir = identificacaoRiscoRepository.save(ir);
 
 		return new IdentificacaoRiscoDTO(ir);
 	}
 
-	public void delete(String id) {
+	public IdentificacaoRiscoDTO update(Long id, IdentificacaoRiscoDTO dto) {
+		IdentificacaoRisco ir = identificacaoRiscoRepository.findById(id)
+				.orElseThrow(() -> new RecursoNaoEncontradoException(
+						"Não foi possível encontrar uma IDENTIFICAÇÃO DE RISCO com ID " + id));
+		
+		Conjunto cj = conjuntoService.getEntity(dto.getConjunto().getId());
+		ir.setConjunto(cj);
+		
+		dtoToEntity(ir, dto);
+		ir = identificacaoRiscoRepository.save(ir);
+
+		return new IdentificacaoRiscoDTO(ir);
+	}
+
+	public void delete(Long id) {
 		identificacaoRiscoRepository.deleteById(id);
 	}
 
@@ -95,11 +90,11 @@ public class IdentificacaoRiscoService {
 	}
 
 	private void dtoToEntity(IdentificacaoRisco ir, IdentificacaoRiscoDTO dto) {
+		ir.setIdentificadoPor(dto.getIdentificadoPor());
 		ir.setProjeto(dto.getProjeto());
 		ir.setContrato(dto.getContrato());
 		ir.setTipoRisco(dto.getTipoRisco());
 		ir.setRisco(dto.getRisco());
-		ir.setConjunto(dto.getConjunto());
 		ir.setEvento(dto.getEvento());
 		ir.setDescricaoRisco(dto.getDescricaoRisco());
 		ir.setCausa(dto.getCausa());
@@ -116,7 +111,6 @@ public class IdentificacaoRiscoService {
 		ir.setImpactoFinanceiro(dto.getImpactoFinanceiro());
 		ir.setPlanoContingencia(dto.getPlanoContingencia());
 		ir.setResponsavelRisco(dto.getResponsavelRisco());
-		ir.setResponsavelConjunto(dto.getResponsavelConjunto());
 		ir.setStatus(dto.getStatus());
 	}
 }

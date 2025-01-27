@@ -3,10 +3,13 @@ package br.mil.eb.sgr.sgr.entities;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,13 +19,13 @@ import javax.persistence.TemporalType;
 public class IdentificacaoRisco {
 
 	@Id
-	@Column(unique = true, nullable = false)
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String identificadoPor;
 	private String projeto;
 	private String contrato;
 	private String tipoRisco;
 	private String risco;
-	private String conjunto;
 	
 	@Lob
 	private String evento;
@@ -44,8 +47,8 @@ public class IdentificacaoRisco {
 	private String severidade;
 	private String impactoFinanceiro;
 	private String responsavelRisco;
-	private String responsavelConjunto;
 	private String status;
+	private Integer ano;
 	
 	@Temporal(TemporalType.DATE)
 	private Date dataLimite;
@@ -53,17 +56,27 @@ public class IdentificacaoRisco {
 	@Temporal(TemporalType.DATE)
 	private Date dataRisco;
 	
-	private Integer ano;
+	@ManyToOne
+    @JoinColumn(name = "id_conjunto")
+    private Conjunto conjunto;
 	
 	public IdentificacaoRisco() {
 	}
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getIdentificadoPor() {
+		return identificadoPor;
+	}
+
+	public void setIdentificadoPor(String identificadoPor) {
+		this.identificadoPor = identificadoPor;
 	}
 
 	public String getProjeto() {
@@ -96,14 +109,6 @@ public class IdentificacaoRisco {
 
 	public void setRisco(String risco) {
 		this.risco = risco;
-	}
-
-	public String getConjunto() {
-		return conjunto;
-	}
-
-	public void setConjunto(String conjunto) {
-		this.conjunto = conjunto;
 	}
 
 	public String getEvento() {
@@ -210,14 +215,6 @@ public class IdentificacaoRisco {
 		this.responsavelRisco = responsavelRisco;
 	}
 
-	public String getResponsavelConjunto() {
-		return responsavelConjunto;
-	}
-
-	public void setResponsavelConjunto(String responsavelConjunto) {
-		this.responsavelConjunto = responsavelConjunto;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -250,15 +247,12 @@ public class IdentificacaoRisco {
 		this.ano = ano;
 	}
 
-	@Override
-	public String toString() {
-		return "IdentificacaoRisco [id=" + id + ", projeto=" + projeto + ", contrato=" + contrato + ", tipoRisco="
-				+ tipoRisco + ", risco=" + risco + ", conjunto=" + conjunto + ", evento=" + evento + ", descricaoRisco="
-				+ descricaoRisco + ", causa=" + causa + ", consequencia=" + consequencia + ", tratamento=" + tratamento
-				+ ", planoContingencia=" + planoContingencia + ", categoria=" + categoria + ", probabilidade="
-				+ probabilidade + ", impacto=" + impacto + ", criticidade=" + criticidade + ", severidade=" + severidade
-				+ ", impactoFinanceiro=" + impactoFinanceiro + ", responsavelRisco=" + responsavelRisco
-				+ ", responsavelConjunto=" + responsavelConjunto + ", status=" + status + "]";
+	public Conjunto getConjunto() {
+		return conjunto;
+	}
+
+	public void setConjunto(Conjunto conjunto) {
+		this.conjunto = conjunto;
 	}
 
 	@Override
